@@ -2,7 +2,7 @@
 
 import argparse
 
-from .draft import Draft, ban, resolve
+from .draft import Draft, DraftError, ban, resolve
 
 
 def build_parser():
@@ -17,7 +17,10 @@ def main(argv=None):
     if args.sample == "duplicate":
         draft = Draft(pool, deadline=100)
         ban(draft, "a", "hero1", 10)
-        ban(draft, "b", "hero1", 20)
+        try:
+            ban(draft, "b", "hero1", 20)
+        except DraftError:
+            pass
         print("bans=%d unique=%d" % (resolve(draft, 30), len(set(draft.bans["a"] + draft.bans["b"]))))
     elif args.sample == "timeout":
         draft = Draft(pool, deadline=100)
